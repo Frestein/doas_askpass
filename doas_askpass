@@ -39,5 +39,15 @@ expect {
     }
 }
 
-expect eof
-log_user 1
+# Consume extra newline to avoid blank line
+expect \r
+
+# Check if we are running interactively (stdout is a terminal)
+if { [dict exists [fconfigure stdout] -mode] } {
+    # Pass control to the user — for interactive programs
+    interact
+} else {
+    # Non-interactive: just show output and wait
+    log_user 1
+    expect eof
+}
